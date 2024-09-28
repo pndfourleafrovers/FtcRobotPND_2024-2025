@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TEST;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -15,6 +16,7 @@ public class ViperExtension extends LinearOpMode {
     private DcMotor viper;
     private DcMotor arm;
     int currentDegree = 0;
+
     @Override
     public void runOpMode() {
         viper = hardwareMap.get(DcMotor.class, "viper");
@@ -125,7 +127,11 @@ public class ViperExtension extends LinearOpMode {
         }
     }
 
-
+    public double getDistance() {
+        double armPos;
+        armPos = viper.getCurrentPosition()/ticksPerViperInch;
+        return armPos;
+    }
 
 
 
