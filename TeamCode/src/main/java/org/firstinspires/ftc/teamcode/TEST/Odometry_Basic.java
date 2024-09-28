@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous (name = "Odometry", group = "Autonomous")
+//@Disabled
 public class Odometry_Basic extends LinearOpMode {
     private DcMotor leftFrontDrive = null;  //  Used to control the left front drive wheel
     private DcMotor rightFrontDrive = null;  //  Used to control the right front drive wheel
@@ -86,6 +87,10 @@ public void OdoMovement(double distance, double power) {
     rightBackDrive.setPower(power);
 
 
+
+    /**
+     * Below is the math!
+     */
     oldRightPosition = currentRightPosition;
     oldLeftPosition = currentLeftPosition;
     oldCenterPosition = currentCenterPosition;
@@ -95,9 +100,7 @@ public void OdoMovement(double distance, double power) {
     currentCenterPosition = centerEncoder.getCurrentPosition();
 
 
-    /**
-     * Below is the math!
-     */
+
     int dn1 = currentLeftPosition  - oldLeftPosition;
     int dn2 = currentRightPosition - oldRightPosition;
     int dn3 = currentCenterPosition - oldCenterPosition;
