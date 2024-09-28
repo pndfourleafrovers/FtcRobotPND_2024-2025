@@ -16,7 +16,7 @@ public class Odometry_Basic extends LinearOpMode {
     private DcMotor rightBackDrive = null;  //  Used to control the right back drive wheel
     private DcMotorEx centerEncoder, rightEncoder, leftEncoder;
     double ticksPerWheelInch = (537.7 / ((96/25.4) * Math.PI)); //537.7 encoder ticks, wheel is 96mm converting to inches divide by 25.4, per one circumference of the wheel
-    double ticksPerEncoderInch = (2000/ ((48/25.4)*Math.PI));
+    double ticksPerEncoderInch = (2000/ ((48/25.4)*Math.PI)); // Dead wheels
     double ticksPerEncoderPerTicksPerWheel = ticksPerEncoderInch/ticksPerWheelInch;
     double trackwidth = 0;
     double trackheight = 0;
