@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 import org.firstinspires.ftc.teamcode.Helper.OdometryMovement;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import org.firstinspires.ftc.teamcode.Helper.SMM;
+import org.firstinspires.ftc.teamcode.Helper.Arm;
+import org.firstinspires.ftc.teamcode.Helper.Viper;
 @Autonomous(name="OdometryAutonomous", group="Autonomous")
+@Disabled
 public class TEST2 extends LinearOpMode {
 
     private OdometryMovement odometryMovement;

@@ -1,21 +1,28 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.TEST.ViperExtension;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.Helper.SMM;
+import org.firstinspires.ftc.teamcode.Helper.Arm;
+import org.firstinspires.ftc.teamcode.Helper.Viper;
+import org.firstinspires.ftc.teamcode.Helper.OdometryMovement;
 
 @TeleOp(name="BasicMovement", group="TeleOp")
-//@Disabled
+@Disabled
 public class BasicMovement extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -59,24 +66,25 @@ public class BasicMovement extends LinearOpMode {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
     RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
     RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+    private Viper Viper;
+    private SMM SMM;
+    private Arm Arm;
 
     @Override
     public void runOpMode() {
-
+        Viper = new Viper();
+        SMM = new SMM();
+        Arm = new Arm();
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         FrontLeft = hardwareMap.get(DcMotor.class, "Left_front");
         RearLeft = hardwareMap.get(DcMotor.class, "Left_rear");
         FrontRight = hardwareMap.get(DcMotor.class, "Right_front");
         RearRight = hardwareMap.get(DcMotor.class, "Right_rear");
-        pmmF = hardwareMap.get(Servo.class, "pmmfloor");
-        pmmA = hardwareMap.get(Servo.class, "pmmA");
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        drone = hardwareMap.get(Servo.class, "drone");
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-        imu.resetYaw();
+        arm = hardwareMap.get(DcMotor.class, "arm");
+
+
 
         FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         RearLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -97,7 +105,7 @@ public class BasicMovement extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Arm Position", arm.getCurrentPosition() / TICKS_PER_DEGREE);
-            telemetry.addData(">", "Robot Heading = %4.0f", getHeading());
+          //  telemetry.addData(">", "Robot Heading = %4.0f", getHeading());
             telemetry.update();
             double max;
 
@@ -132,6 +140,64 @@ public class BasicMovement extends LinearOpMode {
                     powerMultiplier = 1.0;
                 }
             }
+            // viper movement
+
+            //top basket
+            if (gamepad2.a){
+                Viper.viperMovement(10);
+            }
+            //lower basket
+            if(gamepad2.b){
+                Viper.viperMovement(10);
+            }
+            // top specimen
+            if(gamepad2.x){
+                Viper.viperMovement(10);
+            }
+            // lower specimen
+            if(gamepad2.y){
+                Viper.viperMovement(10);
+            }
+
+
+            // smm movement
+
+            //backward
+            if(gamepad2.dpad_down){
+                SMM.smmWMovement(-1);
+            }
+            //forward
+            if(gamepad2.dpad_right){
+                SMM.smmWMovement(1);
+            }
+            //pos 1
+            if(gamepad2.dpad_up){
+                SMM.smmTMovement(1);
+            }
+            //pos 2
+            if(gamepad2.dpad_left){
+                SMM.smmTMovement(0);
+            }
+
+            //arm movement
+
+            //hold up
+            if(gamepad2.left_bumper){
+                Arm.armMovement(7);
+            }
+
+            //rest
+            if(gamepad2.right_bumper){
+                Arm.armMovement(0);
+            }
+            //straight up
+            if(gamepad2.right_stick_button){
+                Arm.armMovement(110);
+            }
+            // level 2 preparing position
+            if(gamepad1.left_bumper){
+                Arm.armMovement(80);
+            }
         }
     }
     private void initHardware() {
@@ -143,6 +209,8 @@ public class BasicMovement extends LinearOpMode {
         RearLeft = hardwareMap.get(DcMotor.class, "Left_rear");
         RearRight = hardwareMap.get(DcMotor.class, "Right_rear");
 
+
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -151,58 +219,4 @@ public class BasicMovement extends LinearOpMode {
         FrontRight.setDirection(DcMotor.Direction.FORWARD);
         RearRight.setDirection(DcMotor.Direction.FORWARD);
     }
-    public double getHeading() {
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        return orientation.getYaw(AngleUnit.DEGREES);
     }
-    private int armMovementBack(int degree, double power) {
-        //    Run = true;
-        while (Run = true) {
-
-            arm.setTargetPosition(TICKS_PER_DEGREE * (degree - currentDegree));
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setPower(power);
-            degree = currentDegree;
-            telemetry.addData("Arm Position:", currentDegree);
-            telemetry.update();
-            break;
-        }
-        return currentDegree;
-    }
-    private int armMovement(int degree) {
-        //    Run = true;
-        while (Run = true) {
-
-            arm.setTargetPosition(TICKS_PER_DEGREE * (degree - currentDegree));
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ArmPowerCalc(degree);
-            degree = currentDegree;
-            telemetry.addData("Arm Position:", currentDegree);
-            telemetry.update();
-            break;
-        }
-        return currentDegree;
-    }
-
-    public double getDegree() {
-        double armPos;
-        armPos = arm.getCurrentPosition()/TICKS_PER_DEGREE;
-        return armPos;
-    }
-
-
-    public void ArmPowerCalc(int CalcDegree) {
-        double ArmMult = 0.01; // This is a proportionality constant. You may need to tune this value.
-        while (Math.abs(getDegree() - CalcDegree) > 0.5) { // Allow for a small error margin
-
-            double error = CalcDegree - getDegree(); // Calculate the error
-
-            // Calculate wheel powers based on error
-            double armPower = error * ArmMult;
-            double Low = 0.2;
-            if(armPower<Low)
-                armPower = Low;
-            arm.setPower(armPower);
-        }
-    }
-}
