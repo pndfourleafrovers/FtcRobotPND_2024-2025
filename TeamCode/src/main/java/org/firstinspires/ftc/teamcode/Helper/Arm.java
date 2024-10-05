@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Helper;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 @Disabled
 
 public class Arm {
@@ -12,6 +14,10 @@ public class Arm {
     private DcMotor arm;
     int currentDegree = 0;
     boolean Run = true;
+    public Arm(HardwareMap hardwareMap){
+        arm = hardwareMap.get(DcMotor.class, "arm");
+
+    }
     public int armMovement(int degree) {
         //    Run = true;
         while (Run = true) {
