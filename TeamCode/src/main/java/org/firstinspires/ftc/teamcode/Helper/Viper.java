@@ -1,22 +1,39 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+@Disabled
 
 public class Viper {
 
     double ticksPerViperInch = (537.7 / ((24/25.4) * Math.PI));
     boolean Run = true;
     private DcMotor viper;
-    private DcMotor arm;
-    int currentDegree = 0;
+    int currentDistance = 0;
 
-    public double viperMovement(double distance, double power) {
-        double currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
+    public double viperMovement(int distance) {
+
+
+        //double currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
         while (Run = true) {
 
             int movement = (int) (ticksPerViperInch * (distance - currentDistance));
-            viper.setTargetPosition(movement);
+            viper.setTargetPosition(-movement);
+            viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ViperPowerCalc(distance);
+            distance = currentDistance;
+            break;
+        }
+        return currentDistance;
+    }
+    public double viperMovementSetSpeed(int distance, double power) {
+
+        //double currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
+        while (Run = true) {
+
+            int movement = (int) (ticksPerViperInch * (distance - currentDistance));
+            viper.setTargetPosition(-movement);
             viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             viper.setPower(power);
             distance = currentDistance;
@@ -35,7 +52,7 @@ public class Viper {
             double Low = 0.2;
             if(viperPower<Low)
                 viperPower = Low;
-            arm.setPower(viperPower);
+            viper.setPower(viperPower);
         }
     }
     public double getDistance() {

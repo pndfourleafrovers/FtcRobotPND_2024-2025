@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.TEST;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="BasicMovement", group="TeleOp")
+
+@TeleOp(name="ViperExtension", group="TeleOp")
 public class ViperExtension extends LinearOpMode {
     static final int TICKS_PER_MOTOR_REV = 1425;
     static final int TICKS_PER_GEAR_REV = TICKS_PER_MOTOR_REV * 3;
@@ -16,7 +18,7 @@ public class ViperExtension extends LinearOpMode {
     private DcMotor viper;
     private DcMotor arm;
     int currentDegree = 0;
-
+    int currentDistance = 0;
     @Override
     public void runOpMode() {
         viper = hardwareMap.get(DcMotor.class, "viper");
@@ -47,7 +49,7 @@ public class ViperExtension extends LinearOpMode {
             int holdPosition = arm.getCurrentPosition() / TICKS_PER_DEGREE;
             telemetry.addData("Arm Position", arm.getCurrentPosition() / TICKS_PER_DEGREE);
             telemetry.update();
-            armMovementBack(holdPosition, 0.2);
+            armMovement(holdPosition);
         }
 
 
@@ -77,6 +79,12 @@ public class ViperExtension extends LinearOpMode {
         if(gamepad2.a){
             viperMovement(10,0.2);
         }
+        if(gamepad1.a){
+            viperMovement(10,0.5);
+        }
+        if(gamepad1.b){
+            viperMovement(20,0.7);
+        }
         if(gamepad2.b){
             viperMovement(0,0.2);
         }
@@ -95,15 +103,19 @@ public class ViperExtension extends LinearOpMode {
 
 
     }
+// viper is backwards for some reason. Either change mechanics or add a negative to the double current distance
+    // mess around with power, changed some things, but left some leftover code in case we need to change back for testing
+    private double viperMovement(int distance, double power) {
 
-    private double viperMovement(double distance, double power) {
-        double currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
+
+      //  int currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
         while (Run = true) {
 
+
             int movement = (int) (ticksPerViperInch * (distance - currentDistance));
-            viper.setTargetPosition(movement);
+            viper.setTargetPosition(-movement);
             viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            viper.setPower(power);
+            ViperPowerCalc(distance);
             distance = currentDistance;
             telemetry.addData("Viper Position:", currentDistance);
             telemetry.update();
@@ -123,7 +135,7 @@ public class ViperExtension extends LinearOpMode {
             double Low = 0.2;
             if(viperPower<Low)
                 viperPower = Low;
-            arm.setPower(viperPower);
+            viper.setPower(viperPower);
         }
     }
 
@@ -137,20 +149,7 @@ public class ViperExtension extends LinearOpMode {
 
 
 
-        private int armMovementBack(int degree, double power) {
-            //    Run = true;
-            while (Run = true) {
 
-                arm.setTargetPosition(TICKS_PER_DEGREE * (degree - currentDegree));
-                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                arm.setPower(power);
-                degree = currentDegree;
-                telemetry.addData("Arm Position:", currentDegree);
-                telemetry.update();
-                break;
-            }
-            return currentDegree;
-        }
         private int armMovement(int degree) {
             //    Run = true;
             while (Run = true) {

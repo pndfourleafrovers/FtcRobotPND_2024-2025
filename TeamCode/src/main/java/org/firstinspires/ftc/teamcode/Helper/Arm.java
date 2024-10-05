@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+@Disabled
 
 public class Arm {
     static final int TICKS_PER_MOTOR_REV = 1425;
@@ -10,7 +12,7 @@ public class Arm {
     private DcMotor arm;
     int currentDegree = 0;
     boolean Run = true;
-    private int armMovement(int degree) {
+    public int armMovement(int degree) {
         //    Run = true;
         while (Run = true) {
 
@@ -22,7 +24,18 @@ public class Arm {
         }
         return currentDegree;
     }
+    public int armMovementSetPower(int degree, double power) {
+        //    Run = true;
+        while (Run = true) {
 
+            arm.setTargetPosition(TICKS_PER_DEGREE * (degree - currentDegree));
+            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm.setPower(power);
+            degree = currentDegree;
+            break;
+        }
+        return currentDegree;
+    }
     public double getDegree() {
         double armPos;
         armPos = arm.getCurrentPosition()/TICKS_PER_DEGREE;
