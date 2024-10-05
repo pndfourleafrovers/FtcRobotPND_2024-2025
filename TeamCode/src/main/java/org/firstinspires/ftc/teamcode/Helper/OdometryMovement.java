@@ -44,9 +44,9 @@ public class OdometryMovement {
         RearRight = hardwareMap.get(DcMotor.class, "Right_rear");
 
         // Initialize the odometry encoders
-        leftOdometry = hardwareMap.get(DcMotor.class, "leftOdometry");
-        rightOdometry = hardwareMap.get(DcMotor.class, "rightOdometry");
-        horizontalOdometry = hardwareMap.get(DcMotor.class, "horizontalOdometry");
+        leftOdometry = hardwareMap.get(DcMotor.class, "leftOd");
+        rightOdometry = hardwareMap.get(DcMotor.class, "rightOd");
+        horizontalOdometry = hardwareMap.get(DcMotor.class, "centerOd");
 
         // Set motor directions
         FrontLeft.setDirection(DcMotor.Direction.REVERSE);
