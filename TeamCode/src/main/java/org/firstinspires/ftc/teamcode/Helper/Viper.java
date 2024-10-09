@@ -3,27 +3,45 @@ package org.firstinspires.ftc.teamcode.Helper;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 @Disabled
 
 public class Viper {
 
     double ticksPerViperInch = (537.7 / ((24/25.4) * Math.PI));
     boolean Run = true;
-    private DcMotor viper;
+    public DcMotor viper;
     int currentDistance = 0;
+    public DigitalChannel limit;
 
+    public Viper(HardwareMap hardwareMap){
+        viper = hardwareMap.get(DcMotor.class, "viper");
+
+    }
     public double viperMovement(int distance) {
 
 
         //double currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
         while (Run = true) {
+          //  if (limit.getState() == false) {    might have to move to above viper.setTargetPosition
+                int movement = (int) (ticksPerViperInch * (distance - currentDistance));
+         //   if (limit.getState() == false) {
+                viper.setTargetPosition(-movement);
+                viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                ViperPowerCalc(distance);
+                distance = currentDistance;
+                break;
+         //   }
+          /*  else if (limit.getState() ==  true) {
+                viper.setTargetPosition(0);
+                viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                ViperPowerCalc(distance);
+                distance = currentDistance;
+                break;
+                }*/
 
-            int movement = (int) (ticksPerViperInch * (distance - currentDistance));
-            viper.setTargetPosition(-movement);
-            viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ViperPowerCalc(distance);
-            distance = currentDistance;
-            break;
         }
         return currentDistance;
     }
@@ -56,8 +74,8 @@ public class Viper {
         }
     }
     public double getDistance() {
-        double armPos;
-        armPos = viper.getCurrentPosition()/ticksPerViperInch;
-        return armPos;
+        double viperPos;
+        viperPos = viper.getCurrentPosition()/ticksPerViperInch;
+        return viperPos;
     }
 }
