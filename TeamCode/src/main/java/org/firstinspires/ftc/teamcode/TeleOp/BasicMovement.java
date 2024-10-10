@@ -72,9 +72,9 @@ public class BasicMovement extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Viper = new Viper();
-        SMM = new SMM();
-        Arm = new Arm();
+        Viper = new Viper(hardwareMap);
+        SMM = new SMM(hardwareMap);
+        Arm = new Arm(hardwareMap);
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         FrontLeft = hardwareMap.get(DcMotor.class, "Left_front");

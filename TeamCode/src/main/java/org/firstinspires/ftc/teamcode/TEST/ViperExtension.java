@@ -13,7 +13,9 @@ public class ViperExtension extends LinearOpMode {
     static final int TICKS_PER_MOTOR_REV = 1425;
     static final int TICKS_PER_GEAR_REV = TICKS_PER_MOTOR_REV * 3;
     static final int TICKS_PER_DEGREE = TICKS_PER_GEAR_REV / 360;
-    double ticksPerViperInch = (537.7 / ((24/25.4) * Math.PI));
+
+    double ticksPerGearRev = 112/25.4;
+    double ticksPerViperInch = (537.7 / ((112/25.4) * Math.PI));
     boolean Run = true;
     private DcMotor viper;
     private DcMotor arm;
@@ -76,25 +78,22 @@ public class ViperExtension extends LinearOpMode {
         }
 
 
-        if(gamepad2.a){
-            viperMovement(10,0.2);
-        }
+
         if(gamepad1.a){
-            viperMovement(10,0.5);
+            viperMovementSetSpeed(0,0.2);
         }
         if(gamepad1.b){
-            viperMovement(20,0.7);
+            viperMovementSetSpeed(10,0.5);
         }
-        if(gamepad2.b){
-            viperMovement(0,0.2);
+        if(gamepad1.x){
+            viperMovementSetSpeed(20,0.5);
         }
-        if(gamepad2.x){
-            viperMovement(30,0.5);
+        if(gamepad1.y){
+            viperMovementSetSpeed(30,0.5);
         }
-        if(gamepad2.y){
-            viperMovement(100,1);
+        if(gamepad2.a){
+            viperMovement(30,0);
         }
-
 
 
 
@@ -111,11 +110,30 @@ public class ViperExtension extends LinearOpMode {
       //  int currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
         while (Run = true) {
 
-
+            viper.setDirection(DcMotor.Direction.REVERSE);
             int movement = (int) (ticksPerViperInch * (distance - currentDistance));
-            viper.setTargetPosition(-movement);
+            viper.setTargetPosition(movement);
             viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             ViperPowerCalc(distance);
+            distance = currentDistance;
+            telemetry.addData("Viper Position:", currentDistance);
+            telemetry.update();
+            break;
+        }
+        return currentDistance;
+    }
+    private double viperMovementSetSpeed(int distance, double power) {
+
+
+        //  int currentDistance = viper.getCurrentPosition()/ticksPerViperInch;
+        while (Run = true) {
+
+            viper.setDirection(DcMotor.Direction.REVERSE);
+
+            int movement = (int) (ticksPerViperInch * (distance - currentDistance));
+            viper.setTargetPosition(movement);
+            viper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            viper.setPower(power);
             distance = currentDistance;
             telemetry.addData("Viper Position:", currentDistance);
             telemetry.update();
@@ -140,9 +158,9 @@ public class ViperExtension extends LinearOpMode {
     }
 
     public double getDistance() {
-        double armPos;
-        armPos = viper.getCurrentPosition()/ticksPerViperInch;
-        return armPos;
+        double viperPos;
+        viperPos = viper.getCurrentPosition()/ticksPerViperInch;
+        return viperPos;
     }
 
 
